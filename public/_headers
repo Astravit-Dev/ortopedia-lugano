@@ -1,0 +1,20 @@
+# Cabeceras para Cloudflare Workers Static Assets.
+# Este archivo se copia a dist/ en el build y Cloudflare lo lee al desplegar.
+# Por defecto Cloudflare manda `public, max-age=0, must-revalidate` en todo.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests
+
+# JS y CSS los versiona Vite con un hash en el nombre: nunca cambian.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Las fotos tienen nombre fijo, así que no pueden ser inmutables: si se cambia
+# una imagen del catálogo tiene que llegar al visitante sin cambiarle el nombre.
+# Un día de caché, y hasta un mes sirviendo la vieja mientras revalida.
+/media/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000

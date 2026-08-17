@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "ortopedia-lugano",
+  "compatibility_date": "2026-08-17",
+
+  // Sitio 100% estático: no hace falta script de Worker. Cloudflare sirve
+  // directamente lo que genera `npm run build`, sin invocaciones de Worker.
+  "assets": {
+    "directory": "./dist",
+
+    // Hoy la web es una sola página con anclas, así que una ruta inexistente
+    // debe devolver 404 de verdad (mejor para SEO que un 200 con la home).
+    // Si más adelante se agrega un router en el cliente, cambiar esto por
+    // "single-page-application".
+    "not_found_handling": "404-page",
+
+    // URLs sin barra final: /contacto y no /contacto/
+    "html_handling": "drop-trailing-slash"
+  },
+
+  // Las cabeceras de caché y seguridad viven en public/_headers.
+  "observability": {
+    "enabled": true
+  }
+}
